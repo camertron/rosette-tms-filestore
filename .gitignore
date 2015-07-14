@@ -1,0 +1,5 @@
+Gemfile.lock
+tester.rb
+.DS_Store
+pkg/
+classpath.txt
