@@ -2,6 +2,7 @@
 
 require 'thread'
 require 'json'
+require 'fileutils'
 
 module Rosette
   module Tms
@@ -32,20 +33,12 @@ module Rosette
           pairs[key]
         end
 
-        def flush
-          @write_mutex.synchronize do
-            File.open(path, 'w+') do |f|
-              f.write(serialize)
-            end
-          end
-        end
-
         def serialize
           pairs.to_json
         end
 
         def delete
-          File.unlink(path)
+          File.unlink(path) if File.exist?(path)
         end
 
         def translation_count
@@ -53,6 +46,15 @@ module Rosette
         end
 
         protected
+
+        def flush
+          @write_mutex.synchronize do
+            FileUtils.mkdir_p(File.dirname(path))
+            File.open(path, 'w+') do |f|
+              f.write(serialize)
+            end
+          end
+        end
 
         def load_pairs
           @pairs = if File.exist?(path)

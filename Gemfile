@@ -14,5 +14,6 @@ group :development, :test do
 end
 
 group :test do
+  gem 'rosette-test-helpers', github: 'rosette-proj/rosette-test-helpers'
   gem 'rspec'
 end

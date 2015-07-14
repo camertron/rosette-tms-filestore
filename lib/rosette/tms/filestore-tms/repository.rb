@@ -21,7 +21,7 @@ module Rosette
 
         def lookup_translations(locale, phrases)
           Array(phrases).map do |phrase|
-            store_for(locale.code).get(phrase.index_value)
+            store_for(locale).get(phrase.index_value)
           end
         end
 

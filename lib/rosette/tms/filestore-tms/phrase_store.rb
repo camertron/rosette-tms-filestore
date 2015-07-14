@@ -41,6 +41,18 @@ module Rosette
           get_phrases(commit_id).size
         end
 
+        def serialize
+          commits.each_with_object({}) do |(commit_id, phrases), ret|
+            ret[commit_id] = phrases.map(&:to_h)
+          end.to_json
+        end
+
+        def delete
+          File.unlink(path) if File.exist?(path)
+        end
+
+        protected
+
         def flush
           @write_mutex.synchronize do
             FileUtils.mkdir_p(File.dirname(path))
@@ -49,18 +61,6 @@ module Rosette
             end
           end
         end
-
-        def serialize
-          commits.each_with_object({}) do |(commit_id, phrases), ret|
-            ret[commit_id] = phrases.map(&:to_h)
-          end.to_json
-        end
-
-        def delete
-          File.unlink(path)
-        end
-
-        protected
 
         def load_commits
           @commits = if File.exist?(path)
